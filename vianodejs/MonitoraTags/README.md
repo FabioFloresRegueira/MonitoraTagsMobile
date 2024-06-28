@@ -28,6 +28,11 @@ samples, guidance on mobile development, and a full API reference.
 # pacotes
 # https://pub.dev/packages/http
 run flutter pub add http
+run flutter pub add google_fonts
+
+
 
 # gerando o APK 
 run flutter build apk
+
+
