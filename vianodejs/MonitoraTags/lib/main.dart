@@ -64,9 +64,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  void _refleh() {
+  void _reflesh() {
     setState(() {
-      //_counter++;
+      //const Futuresync(xfiltro: 'ativos');
     });
   }
 
@@ -74,6 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarMain(widget.title),
+      drawer: const MNULateral(),
       body: const SafeArea(
         child: Padding(
           padding: EdgeInsets.all(10),
@@ -147,12 +148,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
       floatingActionButton: true
           ? FloatingActionButton(
-              onPressed: () {},
+              onPressed: _reflesh,
               tooltip: 'Atualizar',
+              elevation: 0.00,
               child: const Icon(Icons.refresh))
           // ignore: dead_code
           : null,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       bottomNavigationBar: const AppBarBottom(
         fabLocation: FloatingActionButtonLocation.endDocked,
         // ignore: dead_code
@@ -162,7 +164,17 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-enum Calendar { todos, dias0a30, dias31a60, dias61a90, diasmaior90, inativos }
+/* ********************************************* */
+// fILTRO
+/* ********************************************* */
+enum Opcoes {
+  ativos,
+  vigencia0a30,
+  vigencia31a60,
+  vigencia61a90,
+  vigenciamaior90,
+  inativos
+}
 
 class SingleChoice extends StatefulWidget {
   const SingleChoice({super.key});
@@ -172,51 +184,51 @@ class SingleChoice extends StatefulWidget {
 }
 
 class _SingleChoiceState extends State<SingleChoice> {
-  Calendar calendarView = Calendar.todos;
+  Opcoes opcoesView = Opcoes.ativos;
 
   @override
   Widget build(BuildContext context) {
-    return SegmentedButton<Calendar>(
-      segments: const <ButtonSegment<Calendar>>[
-        ButtonSegment<Calendar>(
-            value: Calendar.todos,
+    return SegmentedButton<Opcoes>(
+      segments: const <ButtonSegment<Opcoes>>[
+        ButtonSegment<Opcoes>(
+            value: Opcoes.ativos,
             //label: Text('Todos'),
             tooltip: 'Todos os Ativos',
             icon: Icon(Icons.filter, color: Colors.black)),
-        ButtonSegment<Calendar>(
-            value: Calendar.dias0a30,
+        ButtonSegment<Opcoes>(
+            value: Opcoes.vigencia0a30,
             //label: Text('30'),
             tooltip: '0 a 30 Dias',
             icon: Icon(
               Icons.filter_1,
               color: Colors.red,
             )),
-        ButtonSegment<Calendar>(
-            value: Calendar.dias31a60,
+        ButtonSegment<Opcoes>(
+            value: Opcoes.vigencia31a60,
             //label: Text('60'),
             tooltip: '31 a 60 Dias',
             icon: Icon(
               Icons.filter_2,
               color: Colors.yellow,
             )),
-        ButtonSegment<Calendar>(
-            value: Calendar.dias61a90,
+        ButtonSegment<Opcoes>(
+            value: Opcoes.vigencia61a90,
             //label: Text('90'),
             tooltip: '60 a 90 Dias',
             icon: Icon(
               Icons.filter_3,
               color: Colors.green,
             )),
-        ButtonSegment<Calendar>(
-            value: Calendar.diasmaior90,
+        ButtonSegment<Opcoes>(
+            value: Opcoes.vigenciamaior90,
             //label: Text('Maior'),
             tooltip: 'Maior que 90 Dias',
             icon: Icon(
               Icons.filter_4,
               color: Colors.blue,
             )),
-        ButtonSegment<Calendar>(
-            value: Calendar.inativos,
+        ButtonSegment<Opcoes>(
+            value: Opcoes.inativos,
             //label: Text('Inativo'),
 
             tooltip: 'Todos os Inativos',
@@ -225,13 +237,13 @@ class _SingleChoiceState extends State<SingleChoice> {
               color: Colors.black,
             )),
       ],
-      selected: <Calendar>{calendarView},
-      onSelectionChanged: (Set<Calendar> newSelection) {
+      selected: <Opcoes>{opcoesView},
+      onSelectionChanged: (Set<Opcoes> newSelection) {
         setState(() {
-          // By default there is only a single segment that can be
-          // selected at one time, so its value is always the first
-          // item in the selected set.
-          calendarView = newSelection.first;
+          //Por padrão, há apenas um único segmento que pode ser
+          //selecionado de uma só vez, por isso seu valor é sempre o primeiro
+          //no conjunto selecionado.
+          opcoesView = newSelection.first;
         });
       },
     );
@@ -260,6 +272,9 @@ PreferredSizeWidget appBarMain(String title) {
   );
 }
 
+/* ********************************************* */
+// Bottom APBAR
+/* ********************************************* */
 class AppBarBottom extends StatelessWidget {
   const AppBarBottom({
     super.key,
@@ -285,11 +300,13 @@ class AppBarBottom extends StatelessWidget {
         data: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
         child: Row(
           children: <Widget>[
+            /*
             IconButton(
               tooltip: 'Menu Lateral',
               icon: const Icon(Icons.menu),
               onPressed: () {},
             ),
+            */
             if (centerLocations.contains(fabLocation)) const Spacer(),
             IconButton(
               tooltip: 'Filtro',
@@ -305,6 +322,70 @@ class AppBarBottom extends StatelessWidget {
   }
 }
 
+/* *****************************************
+Drawer - Manu Lateral
+****************************************** */
+class MNULateral extends StatelessWidget {
+  const MNULateral({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+        child: ListView(
+      padding: EdgeInsets.zero,
+      children: [
+        UserAccountsDrawerHeader(
+          currentAccountPicture: ClipRRect(
+            borderRadius: BorderRadius.circular(100),
+            child: Image.asset('assets/logoTCR.jpg'),
+          ),
+          accountName: const Text('TCR'),
+          accountEmail: const Text('ncc@tcrtelecom.net'),
+
+          /*
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(
+                  'https://firebasestorage.googleapis.com/v0/b/lista-de-servicos.appspot.com/o/img-LstServi%C3%A7os.png?alt=media&token=bc36509e-7354-494c-9d80-7c41ad7b07f0'),
+            ),
+          ),
+          */
+        ),
+        ListTile(
+            leading: const Icon(
+              Icons.help_outline,
+              size: 20,
+            ),
+            title: const Text('Parametrizar HostName'),
+            //subtitle: Text('Finalizar Seção'),
+            onTap: () {}),
+        const Divider(),
+        ListTile(
+            leading: const Icon(
+              Icons.help_outline,
+              size: 20,
+            ),
+            title: const Text('Ajuda'),
+            //subtitle: Text('Finalizar Seção'),
+            onTap: () {}),
+        ListTile(
+          leading: const Icon(
+            Icons.exit_to_app,
+            size: 20,
+          ),
+
+          title: const Text('Sair'),
+          //subtitle: Text('Finalizar Seção'),
+          onTap: () => {},
+        ),
+      ],
+    ));
+  }
+}
+
+/* ********************************************* */
+// Modal
+/* ********************************************* */
 enum AnimationStyles { defaultStyle, custom, none }
 
 const List<(AnimationStyles, String)> animationStyleSegments =
@@ -389,6 +470,9 @@ class _ModalFiltroState extends State<ModalFiltro> {
   }
 }
 
+/* ********************************************* */
+// Bottom APBAR
+/* ********************************************* */
 class Futuresync extends StatelessWidget {
   const Futuresync({super.key, required this.xfiltro});
 
